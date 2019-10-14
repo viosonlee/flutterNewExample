@@ -1,4 +1,4 @@
-# simple_news
+# 财经新闻
 
 用flutter写的一个简单的新闻客户端
 
