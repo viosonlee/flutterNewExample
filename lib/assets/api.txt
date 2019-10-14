@@ -1,0 +1,4 @@
+列表接口:
+http://fund.megabank.com.tw/ETFData/djjson/ETNEWSjson.djjson?a=4&b=%s
+a:分类
+b:日期
