@@ -1,16 +1,13 @@
 # simple_news
 
-A new Flutter application.
+用flutter写的一个简单的新闻客户端
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+使用的库
+#### - dio
+  网络请求
+#### - intl
+  格式化时间
+#### - big5
+  “大五码”编码
+#### - flutter_webview_plugin
+  webView
