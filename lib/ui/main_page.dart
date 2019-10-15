@@ -28,7 +28,10 @@ class MainPageState extends State<MainPage> {
             "新闻列表",
           ),
         ),
-        body: _buildListView(),
+        body: RefreshIndicator(
+          onRefresh: _refresh,
+          child: _buildListView(),
+        ),
       ),
     );
   }
@@ -42,11 +45,10 @@ class MainPageState extends State<MainPage> {
           return null;
       },
       itemCount: listData.length,
-      separatorBuilder: (context, i) =>
-          Container(
-            color: Color(0xffd5d5d5),
-            height: 1,
-          ),
+      separatorBuilder: (context, i) => Container(
+        color: Color(0xffd5d5d5),
+        height: 1,
+      ),
     );
   }
 
@@ -73,13 +75,25 @@ class MainPageState extends State<MainPage> {
           listData = newList.ResultSet.Result;
         });
     });
+    return;
   }
+
 //http://fund.megabank.com.tw/ETFData/djhtm/ETNEWSContentMega.djhtm?TYPE=4&DATE=2019/10/12&A=F0D687EE-2404-4300-A1BE-EE080301EC8F
-  void _toDetail(String url) =>
-      Navigator.push(context,
+  void _toDetail(String url) => Navigator.push(context,
           MaterialPageRoute(builder: (BuildContext context) {
-            var fullUrl = NetRequester.baseUrl+"/ETFData/djhtm/ETNEWSContentMega.djhtm?A="+url;
-            debugPrint("fullUrl:"+fullUrl);
-            return WebPage(fullUrl);
-          }));
+        var fullUrl = NetRequester.baseUrl +
+            "/ETFData/djhtm/ETNEWSContentMega.djhtm?A=" +
+            url;
+        debugPrint("fullUrl:" + fullUrl);
+        return WebPage(fullUrl);
+      }));
+
+  Future<Null> _refresh() async {
+    var list = await NetRequester.getListDataNow(4);
+    if (mounted)
+      setState(() {
+        listData = list.ResultSet.Result;
+      });
+    return null;
+  }
 }

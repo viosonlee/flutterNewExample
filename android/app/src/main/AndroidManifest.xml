@@ -8,7 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="simple_news"
+        android:label="财经新闻"
         android:networkSecurityConfig="@xml/clear_text_limit"
         android:icon="@mipmap/ic_launcher">
         <activity
