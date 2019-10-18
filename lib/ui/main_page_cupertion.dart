@@ -1,21 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:simple_news/http/net_requester.dart';
 import 'package:simple_news/models/new_list.dart';
-import 'package:simple_news/ui/web_page.dart';
 
-class MainPage extends StatefulWidget {
+class MainPageCupertino extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MainPageState();
+  State<StatefulWidget> createState() => MainPageCupertinoState();
 }
 
-class MainPageState extends State<MainPage> {
-  static const String TAG = "MAIN";
-
+class MainPageCupertinoState extends State<MainPageCupertino> {
   List<ResultListBean> _listData = new List();
-
-  String _lastRefreshTime = "";
-
   GlobalKey<EasyRefreshState> _easyRefreshKey =
       new GlobalKey<EasyRefreshState>();
   GlobalKey<RefreshHeaderState> _headerKey =
@@ -31,18 +26,20 @@ class MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "新闻列表",
-        ),
-      ),
-//        body: RefreshIndicator(
-//          onRefresh: _refresh,
-//          child: _buildListView(),
-//        ),
-      body: _buildRefreshLoad(),
-    );
+    return CupertinoApp(
+      home: CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            transitionBetweenRoutes: false,
+            middle: Text(
+              "新闻列表",
+              style: TextStyle(
+                  fontSize: 18,
+                  color: CupertinoColors.activeBlue,
+                  fontWeight: FontWeight.normal),
+            ),
+          ),
+          child:_buildRefreshLoad(),
+      ));
   }
 
   Widget _buildRefreshLoad() {
@@ -56,11 +53,11 @@ class MainPageState extends State<MainPage> {
         refreshingText: "刷新中",
         refreshReadyText: "松开刷新",
         refreshText: "下拉刷新",
-        moreInfoColor: Colors.red,
-        textColor: Colors.blue,
-        bgColor: Colors.white,
-//        showMore: true,
-        moreInfo: "上次刷新:" + _lastRefreshTime,
+        moreInfoColor: CupertinoColors.destructiveRed,
+        textColor: CupertinoColors.inactiveGray,
+        bgColor: CupertinoColors.activeOrange,
+        showMore: true,
+        moreInfo: "refresh",
       ),
       refreshFooter: ClassicsFooter(
         key: _footerKey,
@@ -70,10 +67,10 @@ class MainPageState extends State<MainPage> {
         loadingText: "正在加载",
         noMoreText: "没有更多了",
         moreInfo: "加载更多了",
-        bgColor: Colors.white,
-        textColor: Colors.blue,
-        moreInfoColor: Colors.grey,
-//        showMore: true,
+        bgColor: CupertinoColors.activeGreen,
+        textColor: CupertinoColors.inactiveGray,
+        moreInfoColor: CupertinoColors.activeBlue,
+        showMore: true,
       ),
       child: _buildListView(),
       onRefresh: _refresh,
@@ -113,15 +110,6 @@ class MainPageState extends State<MainPage> {
     );
   }
 
-  Future<Null> _loadMore() async {
-    var moreList = await NetRequester.getListDataNow(4);
-    if (mounted) {
-      setState(() {
-        _listData.addAll(moreList.ResultSet.Result);
-      });
-    }
-  }
-
   void _loadData() {
     NetRequester.getListDataNow(4).then((NewList newList) {
       if (mounted)
@@ -132,23 +120,24 @@ class MainPageState extends State<MainPage> {
     return;
   }
 
-//http://fund.megabank.com.tw/ETFData/djhtm/ETNEWSContentMega.djhtm?TYPE=4&DATE=2019/10/12&A=F0D687EE-2404-4300-A1BE-EE080301EC8F
-  void _toDetail(String url) => Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        var fullUrl = NetRequester.baseUrl +
-            "/ETFData/djhtm/ETNEWSContentMega.djhtm?A=" +
-            url;
-        debugPrint("fullUrl:" + fullUrl);
-        return WebPage(fullUrl);
-      }));
-
   Future<Null> _refresh() async {
     var list = await NetRequester.getListDataNow(4);
     if (mounted)
       setState(() {
-        _lastRefreshTime = DateTime.now().toString();
         _listData = list.ResultSet.Result;
       });
     return null;
   }
+
+  Future<Null> _loadMore() async {
+    var moreList = await NetRequester.getListDataNow(4);
+    if (mounted) {
+      setState(() {
+        _listData.addAll(moreList.ResultSet.Result);
+      });
+    }
+  }
+
+  //http://fund.megabank.com.tw/ETFData/djhtm/ETNEWSContentMega.djhtm?TYPE=4&DATE=2019/10/12&A=F0D687EE-2404-4300-A1BE-EE080301EC8F
+  void _toDetail(String url) {}
 }
